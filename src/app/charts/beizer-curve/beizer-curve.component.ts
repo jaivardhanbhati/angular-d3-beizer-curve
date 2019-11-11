@@ -100,7 +100,6 @@ export class BeizerCurveComponent implements AfterViewInit {
       .data([data])
       .style("fill", "red")
       .attr("class", "line")
-      .style("line","background-color:lightgrey;")
       .attr("d", pathData);
 
     svg
