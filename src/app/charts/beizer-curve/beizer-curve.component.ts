@@ -3,7 +3,6 @@ import { fromEvent } from 'rxjs';
 import { debounceTime, tap } from 'rxjs/operators';
 import * as d3 from 'd3';
 
-//<svg width="500" height="400" #svg>
 @Component({
   selector: 'beizer-curve',
   template: `
@@ -16,8 +15,8 @@ import * as d3 from 'd3';
   styleUrls: ['./beizer-curve.component.css']
 })
 export class BeizerCurveComponent implements AfterViewInit {
-  @Input() numOfCurve: number = 2;
-  @Input() numOfPoints: number = 5;
+  @Input() numOfCurves: number;
+  @Input() numOfPoints: number;
   @ViewChild('svg') svgRef: ElementRef<SVGElement>;
   
 
@@ -37,7 +36,7 @@ export class BeizerCurveComponent implements AfterViewInit {
     debugger;
 
     const svg = d3.select(this.svgRef.nativeElement)
-    for(let i =0; i < 3; i++) {
+    for(let i =0; i < this.numOfCurves; i++) {
       const data = this.generateData(width, height, numberOfPoints, i);
       this.drawChart(svg, width, height, margin, data);
     }
@@ -49,7 +48,10 @@ export class BeizerCurveComponent implements AfterViewInit {
         const { width } = this.host.nativeElement.getBoundingClientRect();
         const height = width / (1.2);
         const margin = Math.min(Math.max(width * 0.1, 20), 50);
-        this.drawChart(svg, width, height, margin, data);
+        for(let i =0; i < this.numOfCurves; i++) {
+            const data = this.generateData(width, height, numberOfPoints, i);
+            this.drawChart(svg, width, height, margin, data);
+        }
         // console.log("1 width",width);
         // console.log("1 height",height);
         // console.log("1 margin", margin);
@@ -61,26 +63,20 @@ export class BeizerCurveComponent implements AfterViewInit {
   private drawChart(svg: any, width: number, height: number, margin: number, data: any[]) {
     const chartWidth = width - 2 * margin;
     const chartHeight = height - 2 * margin;
-    // const n = data[0].length;
-    // const maxValue = this.getMaxValue(data);
+    const n = data[0].length;
+    const maxValue = this.getMaxValue(data);
 
-    
+    console.log("maxValue",maxValue);
+    // console.log("1 width",width);
+    // console.log("1 height",height);
+    // console.log("1 margin", margin);
 
     svg
-      .attr('viewBox', `0 0 ${width} ${height}`)
-      .attr('preserveAspectRatio', 'xMinYMid');
+    .attr('viewBox', `0 0 ${width} ${height}`)
+    .attr('preserveAspectRatio', 'xMinYMid meet');
 
     svg.selectAll('g').remove();
-    
-    // const xScale = d3.scaleLinear()
-    //   .domain([0, n-1])
-    //   .range([0, chartWidth]);
 
-    // const yScale = d3.scaleLinear()
-    //   .domain([0, maxValue])
-    //   .range([chartHeight, 0]);
-
-    
     let lineGenerator = d3.line()
     .curve(d3.curveCardinal);
 
@@ -94,12 +90,12 @@ export class BeizerCurveComponent implements AfterViewInit {
       //.attr("class", "line")
       //.attr("d", pathData);
 
-      svg.append("path")
-      .data([data])
-      .attr("class", "line")
-      .style("stroke", "red")
-      .style("fill", "none")
-      .attr("d", pathData);
+    svg.append("path")
+    .data([data])
+    .attr("class", "line")
+    .style("stroke", "red")
+    .style("fill", "none")
+    .attr("d", pathData);
 
     svg
     .selectAll('line')
@@ -114,27 +110,6 @@ export class BeizerCurveComponent implements AfterViewInit {
     })
     .attr('r', 4)
     .attr('fill', 'white');
-    
-
-    
-
-    // const line = d3.line()
-    //   .defined(d => !isNaN(d.data))
-    //   .x((d, i) => xScale(i))
-    //   .y(d => yScale(d.data))
-    //   .curve(d3.curveCardinal)
-
-    // svg.append('g')
-    //   .attr('class', 'x axis')
-    //   .attr('transform', `translate(${margin}, ${chartHeight + margin})`)
-    //   .call(d3.axisBottom(xScale).ticks(Math.min(Math.floor(chartWidth / 25), n)));
-
-    // svg.append('g')
-    //   .attr('class', 'y axis')
-    //   .attr('transform', `translate(${margin}, ${margin})`)
-    //   .call(d3.axisLeft(yScale).ticks(Math.min(Math.floor(chartHeight / 15), maxValue)));
-
-    // const colors = ['steelblue', 'orange'];
   }
 
   private generateData(minValue, maxValue, numOfPoints, index) {
@@ -154,16 +129,18 @@ export class BeizerCurveComponent implements AfterViewInit {
       [300, 280],
       [400, 300],
       [500, 350],
-      [550, 450]
+      [550, 420]
     ];
 
     let newPoints = [];
+    newPoints.push([0,0]);
 
     points.forEach((point) => {
-        newPoints.push([point[0] - 10*index, point[1]  + 10*index]);
+        newPoints.push([point[0] + 10*index, point[1]  + interval]);
     });
     console.log('newpoints', newPoints);
     console.log('index', index);
+    console.log('interval', interval);
     return newPoints;
 
 
@@ -173,5 +150,11 @@ export class BeizerCurveComponent implements AfterViewInit {
       min = Math.ceil(min);
       max = Math.floor(max);
       return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  private getMaxValue(series: {data: number}[][]): number {
+    return series.reduce((serieMax, serie) => {
+      return Math.max(serieMax, serie.reduce((max, value) => Math.max(max, value.data), -Infinity))
+    }, -Infinity);
   }
 }
