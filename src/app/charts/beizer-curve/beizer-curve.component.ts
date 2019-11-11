@@ -34,18 +34,20 @@ export class BeizerCurveComponent implements AfterViewInit {
     const height = width/ (1.2);
     const margin = Math.min(Math.max(width * 0.1, 20), 50);
     const numberOfPoints = 5;
-    const data = this.generateData(width, height, numberOfPoints);
+    
+    //console.log('data',data);
 
     // console.log("width",width);
     // console.log("height",height);
     // console.log("margin", margin);
-    debugger
+    debugger;
 
-    console.log(data);
+    //console.log(data);
 
     const svg = d3.select(this.svgRef.nativeElement)
     for(let i =0; i < this.numOfCurve; i++) {
-      this.drawChart(svg, width, height, margin, data);  
+      const data = this.generateData(width, height, numberOfPoints);
+      this.drawChart(svg, width, height, margin, data);
     }
     fromEvent(window, 'resize')
       .pipe(
@@ -76,7 +78,7 @@ export class BeizerCurveComponent implements AfterViewInit {
       .attr('viewBox', `0 0 ${width} ${height}`)
       .attr('preserveAspectRatio', 'xMinYMid');
 
-    // svg.selectAll('g').remove();
+    svg.selectAll('g').remove();
     
     // const xScale = d3.scaleLinear()
     //   .domain([0, n-1])
@@ -94,8 +96,15 @@ export class BeizerCurveComponent implements AfterViewInit {
 
     d3.select('path').attr('d', pathData);
 
-    d3.select('svg')
-    .selectAll('circle')
+    d3.select('path')
+      .data([data])
+      .style("fill", "red")
+      .attr("class", "line")
+      .style("line","background-color:lightgrey;")
+      .attr("d", pathData);
+
+    svg
+    .selectAll('line')
     .data(data)
     .enter()
     .append('circle')
@@ -105,7 +114,7 @@ export class BeizerCurveComponent implements AfterViewInit {
     .attr('cy', function(d) {
 		return d[1] ;
     })
-    .attr('r', 3);
+    .attr('r', 4);
     
 
     
@@ -154,7 +163,7 @@ export class BeizerCurveComponent implements AfterViewInit {
     //   points.push([10*interval, 10*interval]);
     // }
   
-  let refPoints = [
+  let points = [
       [10, 10],
       [100, 100],
       [200, 180],
@@ -164,22 +173,21 @@ export class BeizerCurveComponent implements AfterViewInit {
       [550, 450]
     ];
 
-  let targetPoints = [];
+    let newPoints = [];
 
-  refPoints.forEach((point) => {
-      let temp = this.getRandomInt(point[0], point[1]);
-      targetPoints.push(point[0] + interval, temp );
-  }); 
+    points.forEach((point) => {
+        newPoints.push([point[0]+20, point[1]-20]);
+    });
+    console.log(newPoints);
 
-    return targetPoints;
+    return newPoints;
 
 
     //return new Array(n).fill(null).map(() => ({data: Math.random() * maxValue }))
   }
-
   private getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
 }
