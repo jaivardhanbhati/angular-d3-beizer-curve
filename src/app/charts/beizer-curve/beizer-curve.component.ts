@@ -6,6 +6,10 @@ import * as d3 from 'd3';
 @Component({
   selector: 'beizer-curve',
   template: `
+    <div class="sliderSection">
+    <input #curveSlider class="curveSlider" type="range" min="1" max="100" value="50">
+    <input #pointSlider class="pointSlider" type="range" min="1" max="100" value="50">
+    </div>  
     <div class="wrapper">
       <svg #svg>
       </svg>
@@ -48,6 +52,7 @@ export class BeizerCurveComponent implements AfterViewInit {
         const { width } = this.host.nativeElement.getBoundingClientRect();
         const height = width / (1.2);
         const margin = Math.min(Math.max(width * 0.1, 20), 50);
+        svg.selectAll('g').remove();
         for(let i =0; i < this.numOfCurves; i++) {
             const data = this.generateData(width, height, numberOfPoints, i);
             this.drawChart(svg, width, height, margin, data);
@@ -133,7 +138,7 @@ export class BeizerCurveComponent implements AfterViewInit {
     ];
 
     let newPoints = [];
-    newPoints.push([0,0]);
+    newPoints.push([5,5]);
 
     points.forEach((point) => {
         newPoints.push([point[0] + 10*index, point[1]  + interval]);
