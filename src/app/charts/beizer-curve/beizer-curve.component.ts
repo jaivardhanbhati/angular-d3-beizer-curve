@@ -29,7 +29,6 @@ export class BeizerCurveComponent implements AfterViewInit {
   constructor(@Host() private host: ElementRef<HTMLElement>) {}
 
   ngAfterViewInit() {
-      //this.generateData(20, 10)
     console.log('getBoundingClientRect()', this.host.nativeElement.getBoundingClientRect());
     const { width } = this.host.nativeElement.getBoundingClientRect();
     console.log("width",width);
@@ -37,9 +36,7 @@ export class BeizerCurveComponent implements AfterViewInit {
     const margin = Math.min(Math.max(width * 0.1, 20), 50);
     const numberOfPoints = 5;
   
-    debugger;
-
-    const svg = d3.select(this.svgRef.nativeElement)
+    let svg = d3.select(this.svgRef.nativeElement);
     for(let i =0; i < this.numOfCurves; i++) {
       const data = this.generateData(width, height, numberOfPoints, i);
       this.drawChart(svg, width, height, margin, data);
@@ -49,51 +46,42 @@ export class BeizerCurveComponent implements AfterViewInit {
         tap(() => this.loading = true),
         debounceTime(300)
       ).subscribe(() => {
+        //On resize - if od svg exists - remove all the elements
+        if(svg) {
+          d3.selectAll("path").remove();
+          d3.selectAll("circle").remove();
+        }
+        svg = d3.select(this.svgRef.nativeElement);
         const { width } = this.host.nativeElement.getBoundingClientRect();
         const height = width / (1.2);
         const margin = Math.min(Math.max(width * 0.1, 20), 50);
-        svg.selectAll('g').remove();
         for(let i =0; i < this.numOfCurves; i++) {
             const data = this.generateData(width, height, numberOfPoints, i);
             this.drawChart(svg, width, height, margin, data);
         }
-        // console.log("1 width",width);
-        // console.log("1 height",height);
-        // console.log("1 margin", margin);
         this.loading = false;
       });
       
   }
 
   private drawChart(svg: any, width: number, height: number, margin: number, data: any[]) {
-    const chartWidth = width - 2 * margin;
-    const chartHeight = height - 2 * margin;
     const n = data[0].length;
-    const maxValue = this.getMaxValue(data);
-
-    console.log("maxValue",maxValue);
-    // console.log("1 width",width);
-    // console.log("1 height",height);
-    // console.log("1 margin", margin);
-
+  
     svg
     .attr('viewBox', `0 0 ${width} ${height}`)
     .attr('preserveAspectRatio', 'xMinYMid meet');
 
-    svg.selectAll('g').remove();
-
     let lineGenerator = d3.line()
     .curve(d3.curveCardinal);
+    const pathData = lineGenerator(data);
 
-    var pathData = lineGenerator(data);
+    //d3.select('path').style("stroke", "red").attr('d', pathData);
 
-    //d3.select('path').attr('d', pathData);
-
-    //d3.select('path')
+    // d3.select('path')
     //  .data([data])
-      //.style("fill", "none")
-      //.attr("class", "line")
-      //.attr("d", pathData);
+    //   .style("fill", "none")
+    //   .attr("class", "line")
+    //   .attr("d", pathData);
 
     svg.append("path")
     .data([data])
@@ -155,11 +143,5 @@ export class BeizerCurveComponent implements AfterViewInit {
       min = Math.ceil(min);
       max = Math.floor(max);
       return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  private getMaxValue(series: {data: number}[][]): number {
-    return series.reduce((serieMax, serie) => {
-      return Math.max(serieMax, serie.reduce((max, value) => Math.max(max, value.data), -Infinity))
-    }, -Infinity);
   }
 }
