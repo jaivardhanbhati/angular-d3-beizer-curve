@@ -1,0 +1,178 @@
+import { AfterViewInit, Component, ElementRef, Host, ViewChild, Input } from '@angular/core';
+import { fromEvent } from 'rxjs';
+import { debounceTime, tap } from 'rxjs/operators';
+import * as d3 from 'd3';
+
+//<svg width="500" height="400" #svg>
+@Component({
+  selector: 'beizer-curve',
+  template: `
+    <div class="wrapper">
+      <svg #svg>
+      <path></path>
+      </svg>
+      <div *ngIf="loading" class="loader">Loading</div>
+    </div>
+  `,
+  styleUrls: ['./beizer-curve.component.css']
+})
+export class BeizerCurveComponent implements AfterViewInit {
+  @Input() numOfCurve: number = 2;
+  @Input() numOfPoints: number = 5;
+  @ViewChild('svg') svgRef: ElementRef<SVGElement>;
+  
+
+  loading = false;
+
+  constructor(@Host() private host: ElementRef<HTMLElement>) {}
+
+  ngAfterViewInit() {
+      //this.generateData(20, 10)
+    console.log('getBoundingClientRect()', this.host.nativeElement.getBoundingClientRect());
+    const { width } = this.host.nativeElement.getBoundingClientRect();
+    console.log("width",width);
+    const height = width/ (1.2);
+    const margin = Math.min(Math.max(width * 0.1, 20), 50);
+    const numberOfPoints = 5;
+    const data = this.generateData(width, height, numberOfPoints);
+
+    // console.log("width",width);
+    // console.log("height",height);
+    // console.log("margin", margin);
+    debugger;
+
+    console.log(data);
+
+    const svg = d3.select(this.svgRef.nativeElement)
+    //for(let i =0; i < this.numOfCurve; i++) {
+    this.drawChart(svg, width, height, margin, data);
+    //}
+    fromEvent(window, 'resize')
+      .pipe(
+        tap(() => this.loading = true),
+        debounceTime(300)
+      ).subscribe(() => {
+        const { width } = this.host.nativeElement.getBoundingClientRect();
+        const height = width / (1.2);
+        const margin = Math.min(Math.max(width * 0.1, 20), 50);
+        this.drawChart(svg, width, height, margin, data);
+        // console.log("1 width",width);
+        // console.log("1 height",height);
+        // console.log("1 margin", margin);
+        this.loading = false;
+      });
+      
+  }
+
+  private drawChart(svg: any, width: number, height: number, margin: number, data: any[]) {
+    const chartWidth = width - 2 * margin;
+    const chartHeight = height - 2 * margin;
+    // const n = data[0].length;
+    // const maxValue = this.getMaxValue(data);
+
+    
+
+    svg
+      .attr('viewBox', `0 0 ${width} ${height}`)
+      .attr('preserveAspectRatio', 'xMinYMid');
+
+    // svg.selectAll('g').remove();
+    
+    // const xScale = d3.scaleLinear()
+    //   .domain([0, n-1])
+    //   .range([0, chartWidth]);
+
+    // const yScale = d3.scaleLinear()
+    //   .domain([0, maxValue])
+    //   .range([chartHeight, 0]);
+
+    
+    let lineGenerator = d3.line()
+    .curve(d3.curveCardinal);
+
+    var pathData = lineGenerator(data);
+
+    d3.select('path').attr('d', pathData);
+
+    d3.select('svg')
+    .selectAll('circle')
+    .data(data)
+    .enter()
+    .append('circle')
+    .attr('cx', function(d) {
+		return d[0] ;
+    })
+    .attr('cy', function(d) {
+		return d[1] ;
+    })
+    .attr('r', 3);
+    
+
+    
+
+    // const line = d3.line()
+    //   .defined(d => !isNaN(d.data))
+    //   .x((d, i) => xScale(i))
+    //   .y(d => yScale(d.data))
+    //   .curve(d3.curveCardinal)
+
+    // svg.append('g')
+    //   .attr('class', 'x axis')
+    //   .attr('transform', `translate(${margin}, ${chartHeight + margin})`)
+    //   .call(d3.axisBottom(xScale).ticks(Math.min(Math.floor(chartWidth / 25), n)));
+
+    // svg.append('g')
+    //   .attr('class', 'y axis')
+    //   .attr('transform', `translate(${margin}, ${margin})`)
+    //   .call(d3.axisLeft(yScale).ticks(Math.min(Math.floor(chartHeight / 15), maxValue)));
+
+    // const colors = ['steelblue', 'orange'];
+
+    // data.forEach((serie, i) => {
+    //   svg
+    //     .append('g')
+    //     .attr('transform', `translate(${margin}, ${margin})`)
+    //     .append('path')
+    //     .datum(serie)
+    //     .attr('fill', 'none')
+    //     .attr('stroke', colors[i])
+    //     .attr('stroke-width', 3)
+    //     .attr('stroke-linejoin', 'round')
+    //     .attr('stroke-linecap', 'round')
+    //     .attr('class', 'line') 
+    //     .attr('d', line)
+    // });
+  }
+
+  private generateData(minValue, maxValue, numOfPoints) {
+
+    const interval = maxValue / numOfPoints;
+
+    // let points = [];
+    // points.push([10, 10]);
+    // for (let i=0; i < 5; i++) {
+    //   points.push([10*interval, 10*interval]);
+    // }
+  
+  let points = [
+      [10, 10],
+      [100, 100],
+      [200, 180],
+      [300, 280],
+      [400, 300],
+      [500, 350],
+      [550, 450]
+    ];
+
+    return points;
+
+
+    //return new Array(n).fill(null).map(() => ({data: Math.random() * maxValue }))
+  }
+
+  // private getMaxValue(series: {data: number}[][]): number {
+  //   return series.reduce((serieMax, serie) => {
+  //     return Math.max(serieMax, serie.reduce((max, value) => Math.max(max, value.data), -Infinity))
+  //   }, -Infinity);
+  // }
+}
