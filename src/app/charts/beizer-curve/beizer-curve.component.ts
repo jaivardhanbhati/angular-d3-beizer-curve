@@ -39,14 +39,14 @@ export class BeizerCurveComponent implements AfterViewInit {
     // console.log("width",width);
     // console.log("height",height);
     // console.log("margin", margin);
-    debugger;
+    debugger
 
     console.log(data);
 
     const svg = d3.select(this.svgRef.nativeElement)
-    //for(let i =0; i < this.numOfCurve; i++) {
-    this.drawChart(svg, width, height, margin, data);
-    //}
+    for(let i =0; i < this.numOfCurve; i++) {
+      this.drawChart(svg, width, height, margin, data);  
+    }
     fromEvent(window, 'resize')
       .pipe(
         tap(() => this.loading = true),
@@ -154,7 +154,7 @@ export class BeizerCurveComponent implements AfterViewInit {
     //   points.push([10*interval, 10*interval]);
     // }
   
-  let points = [
+  let refPoints = [
       [10, 10],
       [100, 100],
       [200, 180],
@@ -164,15 +164,22 @@ export class BeizerCurveComponent implements AfterViewInit {
       [550, 450]
     ];
 
-    return points;
+  let targetPoints = [];
+
+  refPoints.forEach((point) => {
+      let temp = this.getRandomInt(point[0], point[1]);
+      targetPoints.push(point[0] + interval, temp );
+  }); 
+
+    return targetPoints;
 
 
     //return new Array(n).fill(null).map(() => ({data: Math.random() * maxValue }))
   }
 
-  // private getMaxValue(series: {data: number}[][]): number {
-  //   return series.reduce((serieMax, serie) => {
-  //     return Math.max(serieMax, serie.reduce((max, value) => Math.max(max, value.data), -Infinity))
-  //   }, -Infinity);
-  // }
+  private getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 }
