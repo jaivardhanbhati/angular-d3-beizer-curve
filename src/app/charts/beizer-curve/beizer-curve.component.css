@@ -6,3 +6,7 @@ path {
 svg {
   background-color: lightgray;
 }
+
+.line {
+  color : red;
+}

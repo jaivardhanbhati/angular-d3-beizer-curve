@@ -9,7 +9,6 @@ import * as d3 from 'd3';
   template: `
     <div class="wrapper">
       <svg #svg>
-      <path></path>
       </svg>
       <div *ngIf="loading" class="loader">Loading</div>
     </div>
@@ -34,19 +33,12 @@ export class BeizerCurveComponent implements AfterViewInit {
     const height = width/ (1.2);
     const margin = Math.min(Math.max(width * 0.1, 20), 50);
     const numberOfPoints = 5;
-    
-    //console.log('data',data);
-
-    // console.log("width",width);
-    // console.log("height",height);
-    // console.log("margin", margin);
+  
     debugger;
 
-    //console.log(data);
-
     const svg = d3.select(this.svgRef.nativeElement)
-    for(let i =0; i < this.numOfCurve; i++) {
-      const data = this.generateData(width, height, numberOfPoints);
+    for(let i =0; i < 3; i++) {
+      const data = this.generateData(width, height, numberOfPoints, i);
       this.drawChart(svg, width, height, margin, data);
     }
     fromEvent(window, 'resize')
@@ -94,12 +86,19 @@ export class BeizerCurveComponent implements AfterViewInit {
 
     var pathData = lineGenerator(data);
 
-    d3.select('path').attr('d', pathData);
+    //d3.select('path').attr('d', pathData);
 
-    d3.select('path')
+    //d3.select('path')
+    //  .data([data])
+      //.style("fill", "none")
+      //.attr("class", "line")
+      //.attr("d", pathData);
+
+      svg.append("path")
       .data([data])
-      .style("fill", "red")
       .attr("class", "line")
+      .style("stroke", "red")
+      .style("fill", "none")
       .attr("d", pathData);
 
     svg
@@ -113,7 +112,8 @@ export class BeizerCurveComponent implements AfterViewInit {
     .attr('cy', function(d) {
 		return d[1] ;
     })
-    .attr('r', 4);
+    .attr('r', 4)
+    .attr('fill', 'white');
     
 
     
@@ -135,24 +135,9 @@ export class BeizerCurveComponent implements AfterViewInit {
     //   .call(d3.axisLeft(yScale).ticks(Math.min(Math.floor(chartHeight / 15), maxValue)));
 
     // const colors = ['steelblue', 'orange'];
-
-    // data.forEach((serie, i) => {
-    //   svg
-    //     .append('g')
-    //     .attr('transform', `translate(${margin}, ${margin})`)
-    //     .append('path')
-    //     .datum(serie)
-    //     .attr('fill', 'none')
-    //     .attr('stroke', colors[i])
-    //     .attr('stroke-width', 3)
-    //     .attr('stroke-linejoin', 'round')
-    //     .attr('stroke-linecap', 'round')
-    //     .attr('class', 'line') 
-    //     .attr('d', line)
-    // });
   }
 
-  private generateData(minValue, maxValue, numOfPoints) {
+  private generateData(minValue, maxValue, numOfPoints, index) {
 
     const interval = maxValue / numOfPoints;
 
@@ -175,10 +160,10 @@ export class BeizerCurveComponent implements AfterViewInit {
     let newPoints = [];
 
     points.forEach((point) => {
-        newPoints.push([point[0]+20, point[1]-20]);
+        newPoints.push([point[0] - 10*index, point[1]  + 10*index]);
     });
-    console.log(newPoints);
-
+    console.log('newpoints', newPoints);
+    console.log('index', index);
     return newPoints;
 
 
