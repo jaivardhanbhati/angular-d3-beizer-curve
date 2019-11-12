@@ -34,7 +34,7 @@ export class BeizerCurveComponent implements AfterViewInit {
     console.log("width",width);
     const height = width/ (1.2);
     const margin = Math.min(Math.max(width * 0.1, 20), 50);
-    const numberOfPoints = 40;
+    const numberOfPoints = 4;
   
     let svg = d3.select(this.svgRef.nativeElement);
     for(let i =0; i < this.numOfCurves; i++) {
