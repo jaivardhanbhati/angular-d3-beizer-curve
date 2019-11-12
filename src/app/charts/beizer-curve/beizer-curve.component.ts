@@ -75,14 +75,6 @@ export class BeizerCurveComponent implements AfterViewInit {
     .curve(d3.curveCardinal);
     const pathData = lineGenerator(data);
 
-    //d3.select('path').style("stroke", "red").attr('d', pathData);
-
-    // d3.select('path')
-    //  .data([data])
-    //   .style("fill", "none")
-    //   .attr("class", "line")
-    //   .attr("d", pathData);
-
     svg.append("path")
     .data([data])
     .attr("class", "line")
@@ -135,9 +127,6 @@ export class BeizerCurveComponent implements AfterViewInit {
     console.log('index', index);
     console.log('interval', interval);
     return newPoints;
-
-
-    //return new Array(n).fill(null).map(() => ({data: Math.random() * maxValue }))
   }
   private getRandomInt(min, max) {
       min = Math.ceil(min);
