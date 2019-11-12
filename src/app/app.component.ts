@@ -7,17 +7,26 @@ import { Component, ElementRef, Host, ViewChild } from '@angular/core';
 })
 export class AppComponent  {
   name = 'Angular';
-  // numOfCurves : number;
+  curves: number = 5;
+  points: number = 5;
   // numOfPoints : number;
 
   // @ViewChild('curveSlider') curveVal: ElementRef;
 
-  // constructor() {
+  constructor() {
 
-  //   // this.numOfCurves = 5;
-  //   // this.numOfPoints = 5;
+    // this.numOfCurves = 5;
+    // this.numOfPoints = 5;
 
-  //   console.log('curveVal', this.curveVal);
-  // }
+    //console.log('curveVal', this.curveVal);
+  }
+
+  updateCurvesCount() {
+    console.log('CurvesCount', this.curves);
+  }
+
+  updatePointsCount(){
+    console.log('CurvesCount', this.points);
+  }
   
 }

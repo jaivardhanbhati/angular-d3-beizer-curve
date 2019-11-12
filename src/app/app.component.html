@@ -1,14 +1,14 @@
 <div>
   <div class="sliderSection">
     <label>Curves</label>   
-    <input #curves (input)="curves.value" type="range" min="1" max="50" [value]=curves.value>
-     {{curves.value}}
+    <input #curves (input)="updateCurvesCount()" type="range" min="1" max="50" value="curves.value">
+     {{curves.value}}{{curves1}}
   </div>
  
   <div class="sliderSection">
     <label>Elements</label>  
-    <input #points (input)="points.value" type="range" min="1" max="50" [value]=points>
-    {{points.value}}
+    <input #points (input)="updatePointsCount()" type="range" min="1" max="50" [value]="points">
+    {{points.value}}{{points1}}
   </div>
   <beizer-curve [numOfCurves]="curves.value" [numOfPoints]="points.value"></beizer-curve>
 </div>

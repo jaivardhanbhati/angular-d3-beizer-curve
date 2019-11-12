@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Host, ViewChild, Input } from '@angular/core';
+import { OnChanges, Component, ElementRef, Host, ViewChild, Input } from '@angular/core';
 import { fromEvent } from 'rxjs';
 import { debounceTime, tap } from 'rxjs/operators';
 import * as d3 from 'd3';
@@ -14,7 +14,7 @@ import * as d3 from 'd3';
   `,
   styleUrls: ['./beizer-curve.component.css']
 })
-export class BeizerCurveComponent implements AfterViewInit {
+export class BeizerCurveComponent implements OnChanges {
   @Input() numOfCurves: number;
   @Input() numOfPoints: number;
   @ViewChild('svg') svgRef: ElementRef<SVGElement>;
@@ -24,7 +24,9 @@ export class BeizerCurveComponent implements AfterViewInit {
 
   constructor(@Host() private host: ElementRef<HTMLElement>) {}
 
-  ngAfterViewInit() {
+  ngOnChanges() {
+
+    console.log('numOfCurves', this.numOfCurves);
    // console.log('getBoundingClientRect()', this.host.nativeElement.getBoundingClientRect());
     const { width } = this.host.nativeElement.getBoundingClientRect();
     //console.log("width",width);
