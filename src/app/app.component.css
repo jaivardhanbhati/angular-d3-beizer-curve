@@ -2,8 +2,9 @@ html, body {
   font-family: Lato;
 }
 
-.sliderSection {
+.sliders {
     display: flex; 
     justify-content: flex-end;
     background-color: lightgray;
+    padding: .05rem;
 }
