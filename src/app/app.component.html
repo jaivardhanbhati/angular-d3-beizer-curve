@@ -1,3 +1,15 @@
 <div>
+   <div class="sliderSection">
+     <div>
+    <label>XXX</label>   
+    <input #curveSlider class="curveSlider" type="range" min="1" max="100" 
+    value={{numOfCurves}}>
+     </div>
+     <div>
+       <label>YYY</label>  
+    <input #pointSlider class="pointSlider" type="range" min="1" max="100" 
+    value={{numOfPoints}}>
+     </div>
+    </div>  
   <beizer-curve [numOfCurves]=10 [numOfPoints]=15></beizer-curve>
 </div>

@@ -1,3 +1,8 @@
 html, body {
   font-family: Lato;
 }
+
+.sliderSection {
+    display: flex; 
+    justify-content: flex-end;
+}

@@ -6,10 +6,6 @@ import * as d3 from 'd3';
 @Component({
   selector: 'beizer-curve',
   template: `
-    <div class="sliderSection">
-    <input #curveSlider class="curveSlider" type="range" min="1" max="100" value="50">
-    <input #pointSlider class="pointSlider" type="range" min="1" max="100" value="50">
-    </div>  
     <div class="wrapper">
       <svg #svg>
       </svg>
@@ -34,7 +30,7 @@ export class BeizerCurveComponent implements AfterViewInit {
     console.log("width",width);
     const height = width/ (1.2);
     const margin = Math.min(Math.max(width * 0.1, 20), 50);
-    const numberOfPoints = 4;
+    const numberOfPoints = 10;
   
     let svg = d3.select(this.svgRef.nativeElement);
     for(let i =0; i < this.numOfCurves; i++) {
@@ -66,7 +62,7 @@ export class BeizerCurveComponent implements AfterViewInit {
 
   private drawChart(svg: any, width: number, height: number, margin: number, data: any[]) {
     
-    const n = data[0].length;
+    //const n = data[0].length;
   
     svg
     .attr('viewBox', `0 0 ${width} ${height}`)
@@ -101,10 +97,10 @@ export class BeizerCurveComponent implements AfterViewInit {
   private generateData(minValue, maxValue, numOfPoints, index) {
 
   const interval = maxValue / numOfPoints;
-  const randomVal = this.getRandomInt(-2, 2);
+  const randomVal = this.getRandomInt(-5, 5);
   let points = [[10, 10]];
   for(let n=1; n < numOfPoints; n++) {
-      points.push([n * interval , n * interval - 10*randomVal + interval ]);
+      points.push([n * interval + randomVal * n * index, n * interval - 10 * randomVal + interval]);
   }
   
   /*let points = [
