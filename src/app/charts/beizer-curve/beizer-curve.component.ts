@@ -43,7 +43,7 @@ export class BeizerCurveComponent implements OnChanges {
     const height = width/ (1.2);
     let svg = d3.select(this.svgRef.nativeElement);
     for(let i = 0; i < this.numOfCurves; i++) {
-      const data = this.generateData(width, height, this.numOfPoints, i);
+      const data = this.generateData(height, this.numOfPoints, i);
       this.drawChart(svg, width, height , data);
     }
     this.loading = false;
@@ -81,16 +81,17 @@ export class BeizerCurveComponent implements OnChanges {
       .attr('fill', 'white');
   }
 
-  private generateData(minValue, maxValue, numOfPoints, index) {
-  const interval = maxValue / numOfPoints;
+  private generateData(height, numOfPoints, indexOfCurve) {
+  const interval = height / numOfPoints;
   const randomVal = this.getRandomInt(-5, 5);
   let points = [[10, 10]];
   for(let n=1; n < numOfPoints; n++) {
       /* Random Algo to generate equidistant points */
-      points.push([n * interval + randomVal * n * index, n * interval - 10 * randomVal + interval]);
+      points.push([n * interval + randomVal * n * indexOfCurve, n * interval - 10 * randomVal + interval]);
   }
   return points;
   }
+  
   private getRandomInt(min, max) {
       min = Math.ceil(min);
       max = Math.floor(max);
