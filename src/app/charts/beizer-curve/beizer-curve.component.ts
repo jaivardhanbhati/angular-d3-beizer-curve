@@ -46,7 +46,7 @@ export class BeizerCurveComponent implements AfterViewInit {
         tap(() => this.loading = true),
         debounceTime(300)
       ).subscribe(() => {
-        //On resize - if od svg exists - remove all the elements
+        //On resize - if old svg exists - remove all the elements
         if(svg) {
           d3.selectAll("path").remove();
           d3.selectAll("circle").remove();
@@ -101,8 +101,13 @@ export class BeizerCurveComponent implements AfterViewInit {
   private generateData(minValue, maxValue, numOfPoints, index) {
 
   const interval = maxValue / numOfPoints;
+  const randomVal = this.getRandomInt(minValue, maxValue);
+  let points = [[10, 10]];
+  for(let n=1; n < numOfPoints; n++) {
+      points.push([n * interval , n * interval - 10*index]);
+  }
   
-  let points = [
+  /*let points = [
       [10, 10],
       [100, 100],
       [200, 180],
@@ -117,11 +122,11 @@ export class BeizerCurveComponent implements AfterViewInit {
 
     points.forEach((point) => {
         newPoints.push([point[0] + 10*index, point[1]  + interval]);
-    });
-    console.log('newpoints', newPoints);
+    });*/
+    console.log('newpoints', points);
     console.log('index', index);
     console.log('interval', interval);
-    return newPoints;
+    return points;
   }
   private getRandomInt(min, max) {
       min = Math.ceil(min);
