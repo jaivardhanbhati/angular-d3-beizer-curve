@@ -65,6 +65,7 @@ export class BeizerCurveComponent implements AfterViewInit {
   }
 
   private drawChart(svg: any, width: number, height: number, margin: number, data: any[]) {
+    
     const n = data[0].length;
   
     svg
@@ -99,13 +100,7 @@ export class BeizerCurveComponent implements AfterViewInit {
 
   private generateData(minValue, maxValue, numOfPoints, index) {
 
-    const interval = maxValue / numOfPoints;
-
-    // let points = [];
-    // points.push([10, 10]);
-    // for (let i=0; i < 5; i++) {
-    //   points.push([10*interval, 10*interval]);
-    // }
+  const interval = maxValue / numOfPoints;
   
   let points = [
       [10, 10],
