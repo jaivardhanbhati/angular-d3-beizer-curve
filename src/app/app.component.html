@@ -1,15 +1,14 @@
 <div>
-   <div class="sliderSection">
-     <div>
-    <label>XXX</label>   
-    <input #curveSlider class="curveSlider" type="range" min="1" max="100" 
-    value={{numOfCurves}}>
-     </div>
-     <div>
-       <label>YYY</label>  
-    <input #pointSlider class="pointSlider" type="range" min="1" max="100" 
-    value={{numOfPoints}}>
-     </div>
-    </div>  
-  <beizer-curve [numOfCurves]=10 [numOfPoints]=15></beizer-curve>
+  <div class="sliderSection">
+    <label>Curves</label>   
+    <input #curves (input)="curves.value" type="range" min="1" max="50" [value]=curves.value>
+     {{curves.value}}
+  </div>
+ 
+  <div class="sliderSection">
+    <label>Elements</label>  
+    <input #points (input)="points.value" type="range" min="1" max="50" [value]=points>
+    {{points.value}}
+  </div>
+  <beizer-curve [numOfCurves]="curves.value" [numOfPoints]="points.value"></beizer-curve>
 </div>

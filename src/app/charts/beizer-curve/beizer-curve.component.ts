@@ -25,9 +25,9 @@ export class BeizerCurveComponent implements AfterViewInit {
   constructor(@Host() private host: ElementRef<HTMLElement>) {}
 
   ngAfterViewInit() {
-    console.log('getBoundingClientRect()', this.host.nativeElement.getBoundingClientRect());
+   // console.log('getBoundingClientRect()', this.host.nativeElement.getBoundingClientRect());
     const { width } = this.host.nativeElement.getBoundingClientRect();
-    console.log("width",width);
+    //console.log("width",width);
     const height = width/ (1.2);
     const margin = Math.min(Math.max(width * 0.1, 20), 50);
     const numberOfPoints = 10;
@@ -119,9 +119,9 @@ export class BeizerCurveComponent implements AfterViewInit {
     points.forEach((point) => {
         newPoints.push([point[0] + 10*index, point[1]  + interval]);
     });*/
-    console.log('newpoints', points);
-    console.log('index', index);
-    console.log('interval', interval);
+    // console.log('newpoints', points);
+    // console.log('index', index);
+    // console.log('interval', interval);
     return points;
   }
   private getRandomInt(min, max) {
