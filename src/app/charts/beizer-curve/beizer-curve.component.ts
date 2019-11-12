@@ -34,7 +34,7 @@ export class BeizerCurveComponent implements AfterViewInit {
     console.log("width",width);
     const height = width/ (1.2);
     const margin = Math.min(Math.max(width * 0.1, 20), 50);
-    const numberOfPoints = 5;
+    const numberOfPoints = 40;
   
     let svg = d3.select(this.svgRef.nativeElement);
     for(let i =0; i < this.numOfCurves; i++) {
@@ -101,10 +101,10 @@ export class BeizerCurveComponent implements AfterViewInit {
   private generateData(minValue, maxValue, numOfPoints, index) {
 
   const interval = maxValue / numOfPoints;
-  const randomVal = this.getRandomInt(minValue, maxValue);
+  const randomVal = this.getRandomInt(-2, 2);
   let points = [[10, 10]];
   for(let n=1; n < numOfPoints; n++) {
-      points.push([n * interval , n * interval - 10*index]);
+      points.push([n * interval , n * interval - 10*randomVal + interval ]);
   }
   
   /*let points = [
